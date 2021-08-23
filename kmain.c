@@ -1,5 +1,11 @@
  /* The C function */
+    #include "io.h"
+   
     #include "memory_segments.h"
+    #include "interrupts.h"
+    #include "keyboard.h"
+    #include "pic.h"
+    
     int sum_of_three(int arg1, int arg2, int arg3)
     {
         return arg1 + arg2 + arg3;
@@ -25,8 +31,6 @@
         fb[i + 1] = ((fg & 0x0F) << 4) | (bg & 0x0F) ;
     }
     
-    #include "io.h"
-    #include "serial_port.h"
 
     /* The I/O ports */
     #define FB_COMMAND_PORT         0x3D4
@@ -60,14 +64,12 @@ void fb_write(char *buf, unsigned int len ){
      }		
     
     int main(){
-    	char name[] = " AAA BBB CCC DDD EEE FFF " ;
-    	serial_configure(SERIAL_COM1_BASE , Baud_115200) ;
-    	serial_write(SERIAL_COM1_BASE , name , 25) ;
     	segments_install_gdt()  ;
+    	interrupts_install_idt() ;
     	return 0 ;
     }
     
-   //Testing 
+   
     
     
     
