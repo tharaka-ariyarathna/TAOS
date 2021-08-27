@@ -1,11 +1,11 @@
  /* The C function */
     #include "io.h"
-   
+    #include "multiboot.h"
     #include "memory_segments.h"
     #include "interrupts.h"
     #include "keyboard.h"
     #include "pic.h"
-    
+   
     int sum_of_three(int arg1, int arg2, int arg3)
     {
         return arg1 + arg2 + arg3;
@@ -63,15 +63,32 @@ void fb_write(char *buf, unsigned int len ){
      	}
      }		
     
-    int main(){
-    	segments_install_gdt()  ;
-    	interrupts_install_idt() ;
-    	return 0 ;
+    void kmain(unsigned int ebx){
+    	//segments_install_gdt()  ;
+    	//interrupts_install_idt() ;
+    	
+    	multiboot_info_t *mbinfo = (multiboot_info_t *) ebx;
+	multiboot_module_t* modules = (multiboot_module_t*) mbinfo->mods_addr; 
+	unsigned int address_of_module = modules->mod_start;
+  	
+  	if((mbinfo->mods_count) == 1){
+  		char text[] = "Operation successful" ;
+  		fb_write(text , sizeof(text)) ;
+  		
+  		typedef void (*call_module_t)(void);
+        	/* ... */
+        	call_module_t start_program = (call_module_t) address_of_module;
+        	start_program();
+        	/* we'll never get here, unless the module code returns */
+
+  	}else{
+  		char text[] = "Operation failed" ;
+  		fb_write(text , sizeof(text)) ;
+  	}
+       
     }
     
-   
-    
-    
+
     
     
     
