@@ -5,6 +5,7 @@
     #include "interrupts.h"
     #include "keyboard.h"
     #include "pic.h"
+    #include "paging.h"
    
     int sum_of_three(int arg1, int arg2, int arg3)
     {
@@ -61,12 +62,9 @@ void fb_write(char *buf, unsigned int len ){
      		i++ ;
      		fb_move_cursor(i) ;
      	}
-     }		
-    
-    void kmain(unsigned int ebx){
-    	//segments_install_gdt()  ;
-    	//interrupts_install_idt() ;
-    	
+     }	
+     
+     void userMode(unsigned int ebx){
     	multiboot_info_t *mbinfo = (multiboot_info_t *) ebx;
 	multiboot_module_t* modules = (multiboot_module_t*) mbinfo->mods_addr; 
 	unsigned int address_of_module = modules->mod_start;
@@ -85,7 +83,15 @@ void fb_write(char *buf, unsigned int len ){
   		char text[] = "Operation failed" ;
   		fb_write(text , sizeof(text)) ;
   	}
-       
+     }	
+    
+    
+    
+    
+    void kmain(){
+    	segments_install_gdt()  ;
+    	interrupts_install_idt() ;
+    	init_paging();	
     }
     
 
