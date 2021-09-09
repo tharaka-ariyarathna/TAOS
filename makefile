@@ -1,4 +1,4 @@
-    OBJECTS = loader.o kmain.o io.o gdt.o memory_segments.o idt.o interrupt_Handlers.o interrupts.o keyboard.o pic.o 
+    OBJECTS = loader.o kmain.o io.o gdt.o memory_segments.o idt.o interrupt_Handlers.o  keyboard.o pic.o paging.o kheap.o paging_enable.o interrupts.o
 
     CC = gcc
     CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
